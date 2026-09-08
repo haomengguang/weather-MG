@@ -1,0 +1,187 @@
+import java.util.Properties
+
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    id("com.google.dagger.hilt.android")
+}
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use(::load)
+    }
+}
+
+val amapApiKey = providers.gradleProperty("AMAP_API_KEY")
+    .orElse(localProperties.getProperty("AMAP_API_KEY", ""))
+    .get()
+val escapedAmapApiKey = amapApiKey.replace("\\", "\\\\").replace("\"", "\\\"")
+
+val amapWebApiKey = providers.gradleProperty("AMAP_WEB_API_KEY")
+    .orElse(localProperties.getProperty("AMAP_WEB_API_KEY", ""))
+    .get()
+val escapedAmapWebApiKey = amapWebApiKey.replace("\\", "\\\\").replace("\"", "\\\"")
+
+val caiyunToken = providers.gradleProperty("CAIYUN_TOKEN")
+    .orElse(localProperties.getProperty("CAIYUN_TOKEN", ""))
+    .get()
+val escapedCaiyunToken = caiyunToken.replace("\\", "\\\\").replace("\"", "\\\"")
+
+
+val xiaomiAppKey = providers.gradleProperty("XIAOMI_APP_KEY")
+    .orElse(localProperties.getProperty("XIAOMI_APP_KEY", ""))
+    .get()
+val escapedXiaomiAppKey = xiaomiAppKey.replace("\\", "\\\\").replace("\"", "\\\"")
+
+val xiaomiSign = providers.gradleProperty("XIAOMI_SIGN")
+    .orElse(localProperties.getProperty("XIAOMI_SIGN", ""))
+    .get()
+val escapedXiaomiSign = xiaomiSign.replace("\\", "\\\\").replace("\"", "\\\"")
+
+val weatherBaseUrl = providers.gradleProperty("WEATHER_BASE_URL")
+    .orElse(localProperties.getProperty("WEATHER_BASE_URL", "https://wrapper.cyapi.cn/"))
+    .get()
+val alertBaseUrl = providers.gradleProperty("ALERT_BASE_URL")
+    .orElse(localProperties.getProperty("ALERT_BASE_URL", "https://starplucker.cyapi.cn/"))
+    .get()
+
+android {
+    namespace = "com.skypulse.weather"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.skypulse.weather"
+        minSdk = 26
+        targetSdk = 35
+        versionCode = 995
+        versionName = "3.4.19"
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+
+        manifestPlaceholders["AMAP_API_KEY"] = amapApiKey
+        buildConfigField("String", "AMAP_API_KEY", "\"$escapedAmapApiKey\"")
+        buildConfigField("String", "AMAP_WEB_API_KEY", "\"$escapedAmapWebApiKey\"")
+        buildConfigField("String", "CAIYUN_TOKEN", "\"$escapedCaiyunToken\"")
+        buildConfigField("String", "XIAOMI_APP_KEY", "\"$escapedXiaomiAppKey\"")
+        buildConfigField("String", "XIAOMI_SIGN", "\"$escapedXiaomiSign\"")
+        buildConfigField("String", "WEATHER_BASE_URL", "\"${weatherBaseUrl.replace("\"", "\\\"")}\"")
+        buildConfigField("String", "ALERT_BASE_URL", "\"${alertBaseUrl.replace("\"", "\\\"")}\"")
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("release-keystore.jks")
+            storePassword = "weather123"
+            keyAlias = "weather-app"
+            keyPassword = "weather123"
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
+
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+dependencies {
+    // Core
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.activity.compose)
+
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material)
+    implementation(libs.compose.animation)
+
+
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.kotlin.codegen)
+    implementation(libs.okhttp.logging)
+
+    // Location
+    implementation(libs.play.services.location)
+    implementation(libs.amap.location)
+    implementation(libs.accompanist.permissions)
+
+    // UI
+    implementation(libs.androidsvg)
+    implementation(libs.browser)
+    implementation(libs.haze)
+    implementation(libs.splashscreen)
+
+    // DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // DataStore
+    implementation(libs.datastore.preferences)
+
+    // Security — EncryptedSharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // Debug
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Testing
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+}
+
