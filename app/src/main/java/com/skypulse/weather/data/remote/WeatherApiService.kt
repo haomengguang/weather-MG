@@ -18,6 +18,7 @@ interface WeatherApiService {
      * @param span 预报天数
      * @param alert 是否包含预警
      * @param dailyStart 每日预报起始日（-1 = 包含昨天）
+     * @param dailySteps 每日预报天数
      * @param hourlySteps 小时预报步数
      * @param lang 语言
      * @return 天气响应
@@ -28,7 +29,8 @@ interface WeatherApiService {
         span: Int = 16,
         alert: Boolean = true,
         dailyStart: Int? = null,
-        hourlySteps: Int = 24,
+        dailySteps: Int = 15,
+        hourlySteps: Int = 48,
         lang: String = "zh_CN"
     ): WeatherResponse
 }

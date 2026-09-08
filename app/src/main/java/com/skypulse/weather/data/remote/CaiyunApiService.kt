@@ -26,6 +26,7 @@ class CaiyunApiService @Inject constructor(
         span: Int,
         alert: Boolean,
         dailyStart: Int?,
+        dailySteps: Int,
         hourlySteps: Int,
         lang: String
     ): WeatherResponse {
@@ -36,6 +37,7 @@ class CaiyunApiService @Inject constructor(
             span = span,
             alert = alert,
             dailyStart = dailyStart,
+            dailySteps = dailySteps,
             hourlySteps = hourlySteps,
             lang = lang,
             version = APP_VERSION

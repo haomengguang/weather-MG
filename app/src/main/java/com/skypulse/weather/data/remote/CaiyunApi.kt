@@ -15,7 +15,8 @@ interface CaiyunApi {
         @Query("span") span: Int = 16,
         @Query("alert") alert: Boolean = true,
         @Query("dailystart") dailyStart: Int? = null,
-        @Query("hourlysteps") hourlySteps: Int = 24,
+        @Query("dailysteps") dailySteps: Int = 15,
+        @Query("hourlysteps") hourlySteps: Int = 48,
         @Query("lang") lang: String = "zh_CN",
         @Query("version") version: String = "7.59.0"
     ): WeatherResponse

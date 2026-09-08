@@ -1,4 +1,4 @@
-﻿package com.skypulse.weather.sync
+package com.skypulse.weather.sync
 
 import android.util.Log
 import com.skypulse.weather.data.LocationManager
@@ -615,7 +615,7 @@ class WeatherSyncManager @Inject constructor(
                 weatherI("weather_fetch_attempt_start: attempt=${attempt + 1}/${options.maxRetries + 1}, lon=$lon, lat=$lat")
                 val attemptTimeoutMillis = minOf(options.attemptTimeoutMillis, remainingForAttempt)
                 val result = withTimeoutOrNull(attemptTimeoutMillis) {
-                    repository.getWeather(lon, lat, includeYesterday = true)
+                    repository.getWeather(lon, lat, includeYesterday = false)
                 } ?: Result.failure(Exception("weather_fetch_timeout"))
                 result.fold(
                     onSuccess = { response ->
