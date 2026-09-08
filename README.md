@@ -2,9 +2,9 @@
 
 <div align="center">
 
-<img src="screenshot.jpg" width="200" alt="SkyPulse Logo" style="border-radius: 24px;"/>
+<img src="screenshot.jpg" width="200" alt="MG Weather Logo" style="border-radius: 24px;"/>
 
-# SkyPulse
+# MG Weather
 
 **English** | [中文](#chinese)
 
@@ -15,12 +15,12 @@
 [![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack%20Compose-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)]()
 [![Material 3](https://img.shields.io/badge/Design-Material%203-005A9C?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
-[![Release](https://img.shields.io/badge/Version-1.8.96-brightgreen?style=flat-square)]()
+[![Release](https://img.shields.io/badge/Version-3.5.43-brightgreen?style=flat-square)]()
 [![Min SDK](https://img.shields.io/badge/Min%20SDK-26-orange?style=flat-square)]()
 
 A beautifully crafted, feature-rich Android weather app built with **Kotlin** and **Jetpack Compose**, featuring Apple-style weather icons drawn entirely with Canvas API, glassmorphism UI, and smooth animations.
 
-[![Download APK](https://img.shields.io/badge/Download-APK-FF6B35?style=for-the-badge&logo=android&logoColor=white)](https://github.com/qnmlgbd250/weather-none/releases/latest)
+[![Download APK](https://img.shields.io/badge/Download-APK-FF6B35?style=for-the-badge&logo=android&logoColor=white)](https://github.com/haomengguang/weather-MG/releases/latest)
 
 </div>
 
@@ -44,7 +44,7 @@ A beautifully crafted, feature-rich Android weather app built with **Kotlin** an
 ## 📸 Screenshots
 
 <div align="center">
-<img src="screenshot.jpg" width="280" alt="SkyPulse Main Screen"/>
+<img src="screenshot.jpg" width="280" alt="MG Weather Main Screen"/>
 </div>
 
 ## 🏗️ Architecture
@@ -87,8 +87,8 @@ MVVM + Repository Pattern
 
 ```bash
 # Clone the repository
-git clone git@github.com:qnmlgbd250/weather-none.git
-cd weather-none
+git clone git@github.com:haomengguang/weather-MG.git
+cd weather-MG
 
 # Open in Android Studio, sync Gradle, and run on device
 ```
@@ -107,7 +107,7 @@ GET /v2.6/{token}/{lon},{lat}/weather?alert=true&dailysteps=15&hourlysteps=48
 
 <div align="center">
 
-[![Download APK](https://img.shields.io/badge/Download%20v1.8.96-APK-blue?style=for-the-badge&logo=android&logoColor=white)](https://github.com/qnmlgbd250/weather-none/releases/latest)
+[![Download APK](https://img.shields.io/badge/Download%20v3.5.43-APK-blue?style=for-the-badge&logo=android&logoColor=white)](https://github.com/haomengguang/weather-MG/releases/latest)
 
 </div>
 
@@ -131,7 +131,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ### ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=qnmlgbd250/weather-none&type=Date)](https://star-history.com/#qnmlgbd250/weather-none&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haomengguang/weather-MG&type=Date)](https://star-history.com/#haomengguang/weather-MG&Date)
 
 </div>
 
@@ -143,9 +143,9 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 <div align="center">
 
-<img src="screenshot.jpg" width="200" alt="SkyPulse Logo" style="border-radius: 24px;"/>
+<img src="screenshot.jpg" width="200" alt="MG Weather Logo" style="border-radius: 24px;"/>
 
-# SkyPulse
+# MG Weather
 
 **[English](#english)** | 中文
 
@@ -156,12 +156,12 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 [![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack%20Compose-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)]()
 [![Material 3](https://img.shields.io/badge/Design-Material%203-005A9C?style=flat-square)]()
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
-[![Release](https://img.shields.io/badge/Version-1.8.96-brightgreen?style=flat-square)]()
+[![Release](https://img.shields.io/badge/Version-3.5.43-brightgreen?style=flat-square)]()
 [![Min SDK](https://img.shields.io/badge/Min%20SDK-26-orange?style=flat-square)]()
 
 一款精心打造的 Android 天气应用，使用 **Kotlin** + **Jetpack Compose** 构建，采用纯 Canvas API 绘制苹果风格天气图标，搭配毛玻璃 UI 和丝滑动画。
 
-[![Download APK](https://img.shields.io/badge/下载-APK-FF6B35?style=for-the-badge&logo=android&logoColor=white)](https://github.com/qnmlgbd250/weather-none/releases/latest)
+[![Download APK](https://img.shields.io/badge/下载-APK-FF6B35?style=for-the-badge&logo=android&logoColor=white)](https://github.com/haomengguang/weather-MG/releases/latest)
 
 </div>
 
@@ -185,7 +185,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ## 📸 截图
 
 <div align="center">
-<img src="screenshot.jpg" width="280" alt="SkyPulse 主界面"/>
+<img src="screenshot.jpg" width="280" alt="MG Weather 主界面"/>
 </div>
 
 ## 🏗️ 项目架构
@@ -228,8 +228,8 @@ MVVM + Repository 模式
 
 ```bash
 # 克隆仓库
-git clone git@github.com:qnmlgbd250/weather-none.git
-cd weather-none
+git clone git@github.com:haomengguang/weather-MG.git
+cd weather-MG
 
 # 用 Android Studio 打开，同步 Gradle，运行到设备
 ```
@@ -248,7 +248,7 @@ GET /v2.6/{token}/{lon},{lat}/weather?alert=true&dailysteps=15&hourlysteps=48
 
 <div align="center">
 
-[![Download APK](https://img.shields.io/badge/下载%20v1.8.96-APK-blue?style=for-the-badge&logo=android&logoColor=white)](https://github.com/qnmlgbd250/weather-none/releases/latest)
+[![Download APK](https://img.shields.io/badge/下载%20v3.5.43-APK-blue?style=for-the-badge&logo=android&logoColor=white)](https://github.com/haomengguang/weather-MG/releases/latest)
 
 </div>
 
@@ -272,7 +272,7 @@ GET /v2.6/{token}/{lon},{lat}/weather?alert=true&dailysteps=15&hourlysteps=48
 
 ### ⭐ Star 趋势
 
-[![Star History Chart](https://api.star-history.com/svg?repos=qnmlgbd250/weather-none&type=Date)](https://star-history.com/#qnmlgbd250/weather-none&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=haomengguang/weather-MG&type=Date)](https://star-history.com/#haomengguang/weather-MG&Date)
 
 如果觉得不错，请给个 ⭐ Star 支持一下！
 
