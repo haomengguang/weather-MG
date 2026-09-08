@@ -151,10 +151,8 @@ class WeatherViewModel @Inject constructor(
         val cityId = selectedId ?: CitySelectionPolicy.defaultCity(cities)?.id
         cityId to errorMsg
     }.flatMapLatest { (cityId, errorMsg) ->
-        if (cityId == null) {
-            flowOf(WeatherUiState.Loading)
-        } else {
-            repository.observeWeather(cityId).map { entity ->
+        when {
+            cityId != null -> repository.observeWeather(cityId).map { entity ->
                 if (entity != null) {
                     val weather = repository.parseWeatherEntity(entity)
                     if (weather != null) {
@@ -176,6 +174,8 @@ class WeatherViewModel @Inject constructor(
                     WeatherUiState.Loading
                 }
             }
+            errorMsg != null -> flowOf(WeatherUiState.Error(errorMsg))
+            else -> flowOf(WeatherUiState.Loading)
         }
     }.stateIn(
         scope = viewModelScope,
@@ -594,7 +594,7 @@ class WeatherViewModel @Inject constructor(
                 refreshLog("fetch_weather_skip_fresh: ${refreshCity.refreshSummary()}")
                 return@launch
             }
-            performRefreshWithAnimation(refreshCity, source = "fetchWeather")
+            performRefreshWithAnimation(refreshCity, source = "fetchWeather", notifyFailure = true)
         }
     }
 
@@ -710,7 +710,8 @@ class WeatherViewModel @Inject constructor(
         city: City?,
         source: String,
         minElapsedMs: Long = 500L,
-        successDelayMs: Long = 300L
+        successDelayMs: Long = 300L,
+        notifyFailure: Boolean = false
     ) {
         if (!tryBeginUiRefresh(source, city)) return
         setRefreshPhase(RefreshPhase.Refreshing, source, city)
@@ -724,6 +725,8 @@ class WeatherViewModel @Inject constructor(
             if (refreshed) {
                 setRefreshPhase(RefreshPhase.Success, source, city, "elapsed=${elapsed}ms")
                 delay(successDelayMs)
+            } else if (notifyFailure) {
+                showRefreshFailureIfNoCache(city, silent = false, message = "定位或获取天气失败，请检查网络后重试")
             }
         } finally {
             setRefreshPhase(RefreshPhase.Idle, source, city)
@@ -799,9 +802,7 @@ class WeatherViewModel @Inject constructor(
         if (!success && !silent) {
             val errorMsg = (result as? SyncResult.Error)?.message ?: "获取天气数据失败，请稍后重试"
             val city = _savedCities.value.find { it.isCurrentLocation }
-            if (city != null && repository.getWeatherFromCache(city.id) == null) {
-                transientError.value = errorMsg
-            }
+            showRefreshFailureIfNoCache(city, silent = false, message = errorMsg)
         }
         return success
     }

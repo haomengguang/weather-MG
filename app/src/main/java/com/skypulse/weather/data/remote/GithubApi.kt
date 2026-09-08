@@ -13,6 +13,6 @@ data class GithubReleaseResponse(
 
 interface GithubApi {
     @Headers("Accept: application/vnd.github.v3+json")
-    @GET("repos/qnmlgbd250/weather-none/releases/latest")
+    @GET("repos/haomengguang/weather-MG/releases/latest")
     suspend fun getLatestRelease(): GithubReleaseResponse
 }
