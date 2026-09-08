@@ -21,12 +21,14 @@ import javax.inject.Singleton
 @Singleton
 class WeatherRemoteDataSource @Inject constructor(
     private val api: WeatherApiService,
-    private val alertApi: CaiyunAlertApi
+    private val alertApi: CaiyunAlertApi,
+    private val openMeteoApi: OpenMeteoApi
 ) {
 
     companion object {
         private const val TAG = "WeatherRemoteDS"
         private const val ALERT_TIMEOUT_MS = 5_000L
+        private const val OPEN_METEO_TIMEOUT_MS = 5_000L
     }
 
     private fun weatherI(message: String) = FileLogger.weatherI(TAG, message)
@@ -104,9 +106,12 @@ class WeatherRemoteDataSource @Inject constructor(
                 response.result?.alert ?: Alert(status = "error", content = emptyList())
             }
 
-            // 3. 合并天气数据和预警数据（alert 嵌套在 result 中）
+            // 3. 用 Open-Meteo 补齐彩云免费 token 缺失的远期逐日预报（失败静默降级）
+            val dailyWithExtended = extendDailyForecast(longitude, latitude, response)
+
+            // 4. 合并天气数据和预警数据（alert 嵌套在 result 中）
             val merged = response.copy(
-                result = response.result?.copy(alert = alertResponse)
+                result = response.result?.copy(alert = alertResponse, daily = dailyWithExtended)
             )
             weatherI("remote_get_weather_success: total=${elapsedSince(totalStartMs)}ms, alertStatus=${alertResponse.status}, alertCount=${alertResponse.content?.size ?: 0}")
             Result.success(merged)
@@ -115,6 +120,50 @@ class WeatherRemoteDataSource @Inject constructor(
         } catch (e: Exception) {
             weatherE("remote_get_weather_failed: total=${elapsedSince(totalStartMs)}ms, type=${e.javaClass.simpleName}, message=${e.message}", e)
             Result.failure(e)
+        }
+    }
+
+    /**
+     * 彩云免费 token 的逐日预报固定只有 3 天（dailysteps 服务端忽略）。
+     * 用 Open-Meteo 按日期对齐补齐其后天数；任何失败都静默返回原数据。
+     */
+    private suspend fun extendDailyForecast(
+        longitude: Double,
+        latitude: Double,
+        response: WeatherResponse
+    ): com.skypulse.weather.model.DailyForecast? {
+        val caiyunDaily = response.result?.daily ?: return null
+        val caiyunDates = caiyunDaily.temperature?.mapNotNull { it.date?.substringBefore('T') }.orEmpty()
+        val lastCaiyunDate = caiyunDates.lastOrNull()
+            ?: return caiyunDaily
+        return try {
+            val om = withTimeoutOrNull(OPEN_METEO_TIMEOUT_MS) {
+                openMeteoApi.getDailyForecast(latitude = latitude, longitude = longitude)
+            } ?: run {
+                weatherW("open_meteo_timeout: ${OPEN_METEO_TIMEOUT_MS}ms, keep caiyun daily only")
+                return caiyunDaily
+            }
+            val omTime = om.daily?.time.orEmpty()
+            val startIndex = omTime.indexOfFirst { it > lastCaiyunDate }
+                .let { if (it < 0) omTime.size else it }
+            val extended: com.skypulse.weather.model.DailyForecast? = om.daily?.toCaiyunDailyForecast(startIndex)
+            val extTemp = extended?.temperature.orEmpty()
+            if (extended == null || extTemp.isEmpty()) {
+                weatherW("open_meteo_no_extra_days: startIndex=$startIndex, caiyunDays=${caiyunDates.size}")
+                return caiyunDaily
+            }
+            weatherI("open_meteo_extend: caiyunDays=${caiyunDates.size}, omDays=${extTemp.size}")
+            caiyunDaily.copy(
+                temperature = caiyunDaily.temperature.orEmpty() + extTemp,
+                skycon = caiyunDaily.skycon.orEmpty() + extended.skycon.orEmpty(),
+                precipitation = caiyunDaily.precipitation.orEmpty() + extended.precipitation.orEmpty(),
+                astro = caiyunDaily.astro.orEmpty() + extended.astro.orEmpty()
+            )
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            weatherW("open_meteo_failed: type=${e.javaClass.simpleName}, message=${e.message}, keep caiyun daily only")
+            caiyunDaily
         }
     }
 }

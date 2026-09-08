@@ -5,6 +5,7 @@ import com.skypulse.weather.data.XiaomiGeocodingApi
 import com.skypulse.weather.data.remote.CaiyunAlertApi
 import com.skypulse.weather.data.remote.CaiyunApi
 import com.skypulse.weather.data.remote.GithubApi
+import com.skypulse.weather.data.remote.OpenMeteoApi
 import com.skypulse.weather.data.remote.WeatherApiService
 import com.skypulse.weather.data.remote.XiaomiWeatherApi
 import com.squareup.moshi.Moshi
@@ -103,6 +104,16 @@ object NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(XiaomiWeatherApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOpenMeteoApi(client: OkHttpClient, moshi: Moshi): OpenMeteoApi =
+        Retrofit.Builder()
+            .baseUrl(OpenMeteoApi.BASE_URL)
+            .client(client)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(OpenMeteoApi::class.java)
 }
 
 /**
