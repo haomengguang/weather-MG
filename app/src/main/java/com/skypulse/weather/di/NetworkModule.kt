@@ -1,7 +1,7 @@
 package com.skypulse.weather.di
 
 import com.skypulse.weather.BuildConfig
-import com.skypulse.weather.data.XiaomiGeocodingApi
+import com.skypulse.weather.data.OpenMeteoGeocodingApi
 import com.skypulse.weather.data.remote.CaiyunAlertApi
 import com.skypulse.weather.data.remote.CaiyunApi
 import com.skypulse.weather.data.remote.GithubApi
@@ -87,13 +87,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideXiaomiGeocodingApi(client: OkHttpClient, moshi: Moshi): XiaomiGeocodingApi =
+    fun provideOpenMeteoGeocodingApi(client: OkHttpClient, moshi: Moshi): OpenMeteoGeocodingApi =
         Retrofit.Builder()
-            .baseUrl("https://weatherapi.market.xiaomi.com/")
+            .baseUrl("https://geocoding-api.open-meteo.com/")
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(XiaomiGeocodingApi::class.java)
+            .create(OpenMeteoGeocodingApi::class.java)
 
     @Provides
     @Singleton

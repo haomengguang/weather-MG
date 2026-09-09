@@ -300,40 +300,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Benefits section（免广告/天气动效等基础权益对所有用户解锁）
-                SectionHeader("权益")
-                IosCard {
-                    SimpleItem(
-                        title = "免广告",
-                        titleColor = page.textPrimary,
-                        trailing = {
-                            LucideIcon(
-                                name = "check",
-                                contentDescription = "已解锁",
-                                size = 18.dp,
-                                tint = page.accentGreen
-                            )
-                        },
-                        onClick = { }
-                    )
-                    IosDivider()
-                    SimpleItem(
-                        title = "天气动效",
-                        titleColor = page.textPrimary,
-                        trailing = {
-                            LucideIcon(
-                                name = "check",
-                                contentDescription = "已解锁",
-                                size = 18.dp,
-                                tint = page.accentGreen
-                            )
-                        },
-                        onClick = { }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
                 // About section
                 SectionHeader("关于")
                 IosCard {
